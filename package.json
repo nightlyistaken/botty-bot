@@ -1,0 +1,11 @@
+{
+  "name": "botty",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/dhairy-online/botty-bot.git",
+  "author": "dhairy-online <dhairysrivastava5@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^12.5.3"
+  }
+}
