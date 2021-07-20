@@ -18,7 +18,7 @@ module.exports = {
         const targetMember = message.guild.members.cache.get(target.id);
 
         targetMember.send(
-          `You have been kicked from the server ${targetMember} for ${reason}`,
+          `You have been kicked from the server ${targetMember} for ${reason}`
         );
 
         embed
@@ -31,9 +31,7 @@ module.exports = {
         message.channel.send(`Who do you want to kick ${tag} ?`);
       }
     } else {
-      message.channel.send(
-        `${tag} You do not have the permission to do that.`,
-      );
+      message.channel.send(`${tag} You do not have the permission to do that.`);
     }
   },
 };

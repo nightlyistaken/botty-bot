@@ -6,6 +6,8 @@
   "author": "dhairy-online <dhairysrivastava5@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "discord.js": "^12.5.3"
+    "discord.js": "^12.5.3",
+    "express": "^4.17.1",
+    "ms": "^2.1.3"
   }
 }

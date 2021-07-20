@@ -2,14 +2,17 @@ const Discord = require("discord.js");
 const client = new Discord.Client();
 const prefix = "$";
 const fs = require("fs");
+const express = require("express");
+const app = express();
+const path = require("path");
 
 // CONSTS
 
 client.commands = new Discord.Collection();
 
-const commandFiles = fs.readdirSync("./commands/").filter((file) =>
-  file.endsWith(".js")
-);
+const commandFiles = fs
+  .readdirSync("./commands/")
+  .filter((file) => file.endsWith(".js"));
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
 
@@ -20,8 +23,8 @@ for (const file of commandFiles) {
 
 client.on("guildMemberAdd", (member) => {
   console.log("Someone joined");
-  const channel = member.guild.channels.cache.find((ch) =>
-    ch.name === "welcome"
+  const channel = member.guild.channels.cache.find(
+    (ch) => ch.name === "welcome"
   );
 
   if (!channel) return;
@@ -51,17 +54,17 @@ client.on("guildMemberRemove", (member) => {
 });
 // ready (for only 1 time)
 client.once("ready", () => {
-  console.log("The bot is ready to be used. name (botty) ");
+  console.log("The bot is ready to be used. https://bot.divy.work");
 
-  client.user.setActivity(`Exams`, {
-    name: "with depression",
+  client.user.setActivity(`♠︎ Exams`, {
+    name: "LOLs",
     type: "STREAMING",
     url: "https://www.twitch.tv/breadoonline",
   });
 });
 
 // Commands FOR THE B.O.T.
-// AKA handler
+// AKA Command handler
 
 client.on("message", (message) => {
   if (!message.content.startsWith(prefix) || message.author.bot) return;
@@ -75,4 +78,16 @@ client.on("message", (message) => {
   }
 });
 
+// web
+app.use(express.static(path.join(__dirname, "./static")));
+
+app.post("/msg", function (req, res) {
+  const channel = client.channels.cache.find(
+    (c) => c.id == "866527256510857217"
+  );
+  channel.send("hello");
+});
+
 client.login("ODY2MzU3NTk4MjkwOTY4NjI3.YPRYYw.jzGolqyltUxqG5HZ50Vbyb6TeyU");
+
+app.listen(8000);

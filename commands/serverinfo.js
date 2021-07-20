@@ -1,5 +1,5 @@
 module.exports = {
-  name: "sr",
+  name: "serverinfo",
   description: "this is a server info command to see info!",
   execute(message, args) {
     const Discord = require("discord.js");
@@ -11,16 +11,17 @@ module.exports = {
     embed
       .setTitle("Server Info")
       .setColor("#a772c4")
-      .setDescription(
-        ` ${tag} Here is the server info :`,
-      )
-      .addFields({
-        name: "Member Count",
-        value: `${message.guild.memberCount}`,
-      }, {
-        name: "Server Name:",
-        value: `${message.guild.name}`,
-      });
+      .setDescription(` ${tag} Here is the server info :`)
+      .addFields(
+        {
+          name: "Member Count",
+          value: `${message.guild.memberCount}`,
+        },
+        {
+          name: "Server Name:",
+          value: `${message.guild.name}`,
+        }
+      );
 
     message.channel.send(embed);
   },
