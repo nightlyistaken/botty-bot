@@ -19,8 +19,51 @@ for (const file of commandFiles) {
   client.commands.set(command.name, command);
 }
 
+client.on('messageDelete', async message => {
+  if (!message.guild) return;
+  const fetchedLogs = await message.guild.fetchAuditLogs({
+    limit: 1,
+    type: 'MESSAGE_DELETE',
+  });
+  const deletionLog = fetchedLogs.entries.first();
+
+  if (!deletionLog) return message.channel.send(`A message by ${message.author.tag} was deleted, but no relevant audit logs were found.`)
+
+  const { executor, target } = deletionLog;
+
+  if (target.id === message.author.id) {
+    message.channel.send(`A message by ${message.author.tag} was deleted by ${executor.tag}.`);
+  } else {
+    message.channel.send(`A message by ${message.author.tag} was deleted, but we don't know by who.`);
+  }
+});
+
+const roles = ['member']
+
+  const channelId = '867660187871215616'
+
+  client.on('message', (message) => {
+    const { guild, content, member } = message
+
+    if (member.user.bot) {
+      return
+    }
+
+    const hasRole = member.roles.cache.find((role) => {
+      return roles.includes(role.name)
+    })
+
+    if (hasRole) {
+      const channel = guild.channels.cache.get(channelId)
+      channel.send(`<@${member.id}> said this:
+      
+"${content}"`)
+    }
+  });
+
 // THIS IS WELCOME AND LEAVE NON-COMMANDS
 
+// welcome:
 client.on("guildMemberAdd", (member) => {
   console.log("Someone joined");
   const channel = member.guild.channels.cache.find(
@@ -35,6 +78,8 @@ client.on("guildMemberAdd", (member) => {
 
   channel.send(embed);
 });
+
+// bye bye :
 
 client.on("guildMemberRemove", (member) => {
   console.log("Someone left");
@@ -54,10 +99,10 @@ client.on("guildMemberRemove", (member) => {
 });
 // ready (for only 1 time)
 client.once("ready", () => {
-  console.log("The bot is ready to be used. https://bot.divy.work");
+  console.log("The bot is ready to be used. https://b0t.divy.work");
 
   client.user.setActivity(`♠︎ Exams`, {
-    name: "LOLs",
+    name: "STREAMING",
     type: "STREAMING",
     url: "https://www.twitch.tv/breadoonline",
   });

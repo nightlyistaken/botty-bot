@@ -12,7 +12,7 @@ module.exports = {
          embed.addFields({
 
           name: `Yes? if you need help do $help`,
-          value: "visit https://bread.divy.work",
+          value: "visit https://b0t.divy.work",
 
         });
 
