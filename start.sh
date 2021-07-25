@@ -1,0 +1,1 @@
+~/.yarn/bin/nodemon index.js

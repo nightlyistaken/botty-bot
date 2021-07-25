@@ -7,21 +7,21 @@ module.exports = {
     const embed = new Discord.MessageEmbed();
     const { member, mentions } = message;
     const tag = `<@${member.id}>`;
-    const prefix = "$";
+    const config = require("../config.json");
 
     embed
       .setTitle("Commands for the bot")
       .setColor("#848285")
       .setURL("https://bit.ly/3irL6AH")
-      .setDescription(`Hello ${tag} `)
+      .setDescription(`Hello ${tag} My prefix is ${config.prefix.p}`)
       .addFields(
         {
-          name: `${prefix} help-moderation`,
+          name: `${config.prefix.p}help-moderation`,
           value: "This command is for mods.",
           inline: true,
         },
         {
-          name: `${prefix} help-all`,
+          name: `${config.prefix.p}help-all`,
           value: "This Command is for everyone.",
           inline: true,
         }

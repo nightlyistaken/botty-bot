@@ -23,6 +23,8 @@ module.exports = {
 
         embed
           .setThumbnail("https://avatars.githubusercontent.com/u/62501544?v=4")
+          .setAuthor(message.author.username)
+          .setTimestamp()
           .setTitle("A User has been kicked from this server.")
           .setDescription(`${tag} Kicked ${targetMember} for ${reason}`);
 

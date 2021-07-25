@@ -1,7 +1,7 @@
 module.exports = {
-  name: "`cmdname`",
-  description: "`this is a des command!`",
+  name: "",
+  description: "",
   execute(message, args) {
-    // content
+  
   },
 };

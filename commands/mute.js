@@ -9,10 +9,9 @@ module.exports = {
     const embed = new Discord.MessageEmbed();
     const tag = `<@${member.id}>`;
 
-
     if (target) {
       let mainRole = message.guild.roles.cache.find(
-        (role) => role.name === "member"
+        (role) => role.name === "Member"
       );
       let muteRole = message.guild.roles.cache.find(
         (role) => role.name === "muted"
@@ -22,9 +21,9 @@ module.exports = {
       if (!args[1]) {
         memberTarget.roles.remove(mainRole.id);
         memberTarget.roles.add(muteRole.id);
-    embed
-        .setTitle("Muted")
-        .setDescription(`${tag}, You have muted <@${memberTarget.user.id}>`);
+        embed
+          .setTitle("Muted")
+          .setDescription(`${tag}, You have muted <@${memberTarget.user.id}>`);
 
         message.channel.send(embed);
         return;

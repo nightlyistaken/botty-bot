@@ -17,7 +17,14 @@ module.exports = {
       if (target) {
         const targetMember = message.guild.members.cache.get(target.id);
         targetMember.ban();
-        message.channel.send(`${tag} Banned.`);
+        embed
+          .setTitle("A User has been Banned from this server.")
+          .setDescription(`${tag} banned ${target} for ${reason}`)
+          .setThumbnail("https://avatars.githubusercontent.com/u/62501544?v=4")
+          .setAuthor(message.author.username)
+          .setTimestamp();
+
+        message.channel.send(embed);
       } else {
         message.channel.send(`Who do you want to ban ${tag} ? `);
       }

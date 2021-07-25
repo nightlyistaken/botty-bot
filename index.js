@@ -1,12 +1,30 @@
+// CONSTS
+// made by breadA#3012 (breadA)
 const Discord = require("discord.js");
-const client = new Discord.Client();
-const prefix = "$";
 const fs = require("fs");
 const express = require("express");
 const app = express();
 const path = require("path");
+const client = new Discord.Client();
+const config = require("./config.json");
+const util = require('minecraft-server-util');
 
-// CONSTS
+// ready (for only 1 time)
+
+client.once("ready", () => {
+  console.log("The bot is ready to be used. https://b0t.divy.work");
+
+  client.user.setActivity(`♠︎ Prefix $`, {
+    name: "$botty",
+    type: "STREAMING",
+    url: "https://www.twitch.tv/breadoonline",
+  });
+});
+// ready fully
+
+// Commands FOR THE B.O.T.
+// AKA Command handler
+// basic command handler starts here |
 
 client.commands = new Discord.Collection();
 
@@ -19,26 +37,156 @@ for (const file of commandFiles) {
   client.commands.set(command.name, command);
 }
 
-client.on('messageDelete', async message => {
+client.on("message", (message) => {
+  if (!message.content.startsWith(config.prefix.p) || message.author.bot) return;
+
+  const args = message.content.slice(config.prefix.p.length).split(/ +/);
+  const command = args.shift().toLowerCase();
+
+  const handler = client.commands.get(command);
+  if (handler) {
+    handler.execute(message, args);
+  }
+});
+
+// basic command end
+
+const usersMap = new Map();
+const LIMIT = 5;
+const TIME = 7000;
+const DIFF = 3000;
+
+client.on("message", async (message) => {
+  if (message.author.bot) return;
+  if (usersMap.has(message.author.id)) {
+    const userData = usersMap.get(message.author.id);
+    const { lastMessage, timer } = userData;
+    const difference = message.createdTimestamp - lastMessage.createdTimestamp;
+    let msgCount = userData.msgCount;
+    console.log(difference);
+
+    if (difference > DIFF) {
+      clearTimeout(timer);
+      console.log("Cleared Timeout");
+      userData.msgCount = 1;
+      userData.lastMessage = message;
+      userData.timer = setTimeout(() => {
+        usersMap.delete(message.author.id);
+        console.log("Removed from map.");
+      }, TIME);
+      usersMap.set(message.author.id, userData);
+    } else {
+      ++msgCount;
+      if (parseInt(msgCount) === LIMIT) {
+        let muterole = message.guild.roles.cache.find(
+          (role) => role.name === "muted"
+        );
+        let memberRole = message.guild.roles.cache.find(
+          (role) => role.name === "Member"
+        );
+        if (!muterole) {
+          try {
+            muterole = await message.guild.roles.create({
+              name: "muted",
+              permissions: [],
+            });
+            message.guild.channels.cache.forEach(async (channel, id) => {
+              await channel.createOverwrite(muterole, {
+                SEND_MESSAGES: false,
+                ADD_REACTIONS: false,
+              });
+            });
+          } catch (e) {
+            console.log(e);
+          }
+        }
+
+        message.member.roles.add(muterole);
+        message.member.roles.remove(memberRole);
+        const { member, mentions } = message;
+        message.channel
+          .send(`You have been muted <@${member.id}> for spamming`)
+          .then((msg) => {
+            msg.delete({ timeout: 2000 });
+          });
+
+        setTimeout(() => {
+          message.member.roles.remove(muterole);
+          message.member.roles.add(memberRole);
+          message.channel.send("You have been unmuted!").then((msg) => {
+            msg.delete({ timeout: 2000 });
+          });
+        }, TIME);
+      } else {
+        userData.msgCount = msgCount;
+        usersMap.set(message.author.id, userData);
+      }
+    }
+  } else {
+    let fn = setTimeout(() => {
+      usersMap.delete(message.author.id);
+      console.log("Removed from map.");
+    }, TIME);
+    usersMap.set(message.author.id, {
+      msgCount: 1,
+      lastMessage: message,
+      timer: fn,
+    });
+  }
+});
+
+client.on("messageDelete", async (message) => {
   if (!message.guild) return;
   const fetchedLogs = await message.guild.fetchAuditLogs({
     limit: 1,
-    type: 'MESSAGE_DELETE',
+    type: "MESSAGE_DELETE",
   });
   const deletionLog = fetchedLogs.entries.first();
-
-  if (!deletionLog) return message.channel.send(`A message by ${message.author.tag} was deleted, but no relevant audit logs were found.`)
+  const deleteLog = client.channels.cache.find(
+    (channel) => channel.id === "867660187871215616"
+  );
+  if (!deletionLog)
+    return deleteLog.send(
+      `A message by ${message.author.tag} was deleted, but no relevant audit logs were found.`
+    );
 
   const { executor, target } = deletionLog;
 
   if (target.id === message.author.id) {
-    message.channel.send(`A message by ${message.author.tag} was deleted by ${executor.tag}.`);
+    deleteLog.send(
+      `A message by ${message.author.tag} was deleted by ${executor.tag}.`
+    );
   } else {
-    message.channel.send(`A message by ${message.author.tag} was deleted, but we don't know by who.`);
+    deleteLog.send(
+      `A message by ${message.author.tag} was deleted, but we don't know by who.`
+    );
   }
 });
 
-const roles = ['member']
+client.on("message", (message) => {
+  if (message.content === config.prefix.p) {
+    message.reply("Invalid Command.");
+    message.delete({ timeout: 2000 });
+  }
+});
+client.on("messageUpdate", (oldMessage, newMessage) => {
+  // Old message may be undefined
+  if (!oldMessage.author) return;
+  const MessageLog = client.channels.cache.find(
+    (channel) => channel.name === "logs"
+  );
+  const embed = new Discord.MessageEmbed()
+    .setAuthor(newMessage.author.username)
+    .setTimestamp()
+    .setColor("#392B47")
+    .addFields(
+      { name: "original:", value: oldMessage },
+      { name: "edit:", value: newMessage }
+    );
+  MessageLog.send(embed);
+});
+
+/**const roles = ['member']
 
   const channelId = '867660187871215616'
 
@@ -60,15 +208,21 @@ const roles = ['member']
 "${content}"`)
     }
   });
+**/
 
 // THIS IS WELCOME AND LEAVE NON-COMMANDS
 
 // welcome:
 client.on("guildMemberAdd", (member) => {
   console.log("Someone joined");
+  const memberWelcomeRole = member.guild.roles.cache.find(
+    (role) => role.name === "Member"
+  );
   const channel = member.guild.channels.cache.find(
     (ch) => ch.name === "welcome"
   );
+
+  member.roles.add(memberWelcomeRole);
 
   if (!channel) return;
   const embed = new Discord.MessageEmbed()
@@ -97,40 +251,32 @@ client.on("guildMemberRemove", (member) => {
 
   channel.send(embed);
 });
-// ready (for only 1 time)
-client.once("ready", () => {
-  console.log("The bot is ready to be used. https://b0t.divy.work");
 
-  client.user.setActivity(`♠︎ Exams`, {
-    name: "STREAMING",
-    type: "STREAMING",
-    url: "https://www.twitch.tv/breadoonline",
+
+
+const isInvite = async (guild, code) => {
+  return await new Promise((resolve) => {
+    guild.fetchInvites().then((invites) => {
+      for (const invite of invites) {
+        if (code === invite[0]) {
+          resolve(true);
+          return;
+        }
+      }
+      resolve(false);
+    });
   });
-});
+};
 
-// Commands FOR THE B.O.T.
-// AKA Command handler
+client.on("message", async (message) => {
+  const { guild, member, content } = message;
 
-client.on("message", (message) => {
-  if (!message.content.startsWith(prefix) || message.author.bot) return;
+  // discord.gg/23RAN4
 
-  const args = message.content.slice(prefix.length).split(/ +/);
-  const command = args.shift().toLowerCase();
-
-  const handler = client.commands.get(command);
-  if (handler) {
-    handler.execute(message, args);
+  const code = content.split("discord.gg/")[1];
+  if (code && isInvite(guild, code)) {
+    message.channel.send("please dont advertise!");
   }
-});
-
-// web
-app.use(express.static(path.join(__dirname, "./static")));
-
-app.post("/msg", function (req, res) {
-  const channel = client.channels.cache.find(
-    (c) => c.id == "866527256510857217"
-  );
-  channel.send("hello");
 });
 
 client.login("ODY2MzU3NTk4MjkwOTY4NjI3.YPRYYw.jzGolqyltUxqG5HZ50Vbyb6TeyU");

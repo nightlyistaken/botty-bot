@@ -7,30 +7,30 @@ module.exports = {
     const embed = new Discord.MessageEmbed();
     const { member, mentions } = message;
     const tag = `<@${member.id}>`;
-    const prefix = "$";
-
+    const config = require("../config.json");
+    
     embed
       .setTitle("Help Command for Mods")
       .setColor("#848285")
-      .setDescription(`Hey! ${tag} `)
+      .setDescription(`Hey! ${tag} My prefix is ${config.prefix.p} `)
       .addFields(
         {
-          name: `${prefix}mute [time] , ${prefix}unmute`,
+          name: `${config.prefix.p}mute [time] , ${config.prefix.p}unmute`,
           value: "Mute or unmute user.",
           inline: true,
         },
         {
-          name: `${prefix}kick [reason]`,
+          name: `${config.prefix.p}kick [reason]`,
           value: "Command to kick users",
           inline: true,
         },
         {
-          name: `${prefix}clear`,
+          name: `${config.prefix.p}clear`,
           value: "Clears the channel you are present in.",
-          inline: true,
+          inline: false,
         },
         {
-          name: `${prefix}ban [reason]`,
+          name: `${config.prefix.p}ban [reason]`,
           value: "Command to ban users",
           inline: true,
         }

@@ -113,6 +113,11 @@ destroy@~1.0.4:
   resolved "https://registry.yarnpkg.com/destroy/-/destroy-1.0.4.tgz#978857442c44749e4206613e37946205826abd80"
   integrity sha1-l4hXRCxEdJ5CBmE+N5RiBYJqvYA=
 
+discord-anti-spam@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/discord-anti-spam/-/discord-anti-spam-2.5.1.tgz#f1d8fb6c19242e96de6192f0196334e64bbded02"
+  integrity sha512-wIoGgjlTeP7NC1CBQVqDn1yrjKJdaaDHRROSL8C0xpCQZt/o8ba0c7zOHFHxQV5/eNR24KBVmmSHtc8MH7QBIQ==
+
 discord.js@^12.5.3:
   version "12.5.3"
   resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-12.5.3.tgz#56820d473c24320871df9ea0bbc6b462f21cf85c"

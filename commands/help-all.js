@@ -7,33 +7,41 @@ module.exports = {
     const embed = new Discord.MessageEmbed();
     const { member, mentions } = message;
     const tag = `<@${member.id}>`;
-    const prefix = "$";
+    const config = require("../config.json");
 
     embed
       .setTitle("Help Command for all")
       .setColor("#848285")
-      .setDescription(`Hey! ${tag} `)
+      .setDescription(`Hey! ${tag} My Prefix is ${config.prefix.p} `)
       .addFields(
         {
-          name: `${prefix}ping`,
+          name: `${config.prefix.p}ping`,
           value: "Tells your ping is ms.",
           inline: true,
         },
         {
-          name: `${prefix}serverinfo`,
+          name: `${config.prefix.p}serverinfo`,
           value: "Tells you the server information.",
           inline: true,
         },
         {
-          name: `${prefix}help`,
-          value: "the command if you need help",
-          inline: true,
+          name: `${config.prefix.p}help`,
+          value: "The command is for help",
+          inline: false,
         },
         {
-          name: `${prefix}botty`,
+          name: `${config.prefix.p}botty`,
           value: "The bot info.",
           inline: true,
-        }
+        },{
+          name: `${config.prefix.p}author`,
+          value: "Gives you the info about my creator",
+          inline: true,
+        },{
+          name: `${config.prefix.p}hello-world`,
+          value: "Obvious command.",
+          inline: false,
+        },
       );
     message.channel.send(embed);
   },

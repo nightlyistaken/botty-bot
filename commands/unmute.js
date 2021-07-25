@@ -10,7 +10,7 @@ module.exports = {
 
     if (target) {
       let mainRole = message.guild.roles.cache.find(
-        (role) => role.name === "member"
+        (role) => role.name === "Member"
       );
       let muteRole = message.guild.roles.cache.find(
         (role) => role.name === "muted"
