@@ -87,7 +87,7 @@ client.on("message", async (message) => {
         if (!muterole) {
           try {
             muterole = await message.guild.roles.create({
-              name: "muted",
+              name: "muted", 
               permissions: [],
             });
             message.guild.channels.cache.forEach(async (channel, id) => {
