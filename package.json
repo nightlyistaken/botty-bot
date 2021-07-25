@@ -9,6 +9,7 @@
     "discord-anti-spam": "^2.5.1",
     "discord.js": "^12.5.3",
     "express": "^4.17.1",
+    "minecraft-server-util": "^3.5.2",
     "ms": "^2.1.3"
   }
 }
