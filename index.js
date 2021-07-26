@@ -87,7 +87,7 @@ client.on("message", async (message) => {
         if (!muterole) {
           try {
             muterole = await message.guild.roles.create({
-              name: "muted", 
+              name: "muted",
               permissions: [],
             });
             message.guild.channels.cache.forEach(async (channel, id) => {
@@ -253,6 +253,16 @@ client.on("guildMemberRemove", (member) => {
 });
 
 
+
+// website
+app.use(express.static(path.join(__dirname, "./static")));
+
+app.post("/msg", function (req, res) {
+  const channel = client.channels.cache.find(
+    (c) => c.id == "866527256510857217"
+  );
+  channel.send("hello");
+});
 
 const isInvite = async (guild, code) => {
   return await new Promise((resolve) => {
