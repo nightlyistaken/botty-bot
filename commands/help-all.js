@@ -39,8 +39,16 @@ module.exports = {
           inline: true,
         },{
           name: `${config.prefix.p}hello-world`,
-          value: "Obvious command.",
+          value: "Obvious command",
           inline: false,
+        }, {
+          name: `${config.prefix.p}t (thanks)`,
+          value: "Thank someone [reason to thank]",
+          inline: true,
+        }, {
+          name: `${config.prefix.p}mcserver`,
+          value: "Tells info about `hypixel.net`",
+          inline: true,
         },
       );
     message.channel.send(embed);

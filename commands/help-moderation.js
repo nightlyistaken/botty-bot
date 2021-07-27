@@ -8,7 +8,7 @@ module.exports = {
     const { member, mentions } = message;
     const tag = `<@${member.id}>`;
     const config = require("../config.json");
-    
+
     embed
       .setTitle("Help Command for Mods")
       .setColor("#848285")

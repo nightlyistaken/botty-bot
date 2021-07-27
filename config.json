@@ -2,8 +2,7 @@
   "personinfo": {
     "hobby": "Playing Piano",
     "food": "Palak panner",
-    "name": "breadA",
-    "mc-server" : "sample server"
+    "name": "breadA"
   },
   "prefix": {
     "p": "$"

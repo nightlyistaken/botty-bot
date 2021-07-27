@@ -10,7 +10,7 @@ module.exports = {
 
     embed
       .setTitle("You're most welcome!")
-      .setDescription(`Welcome ${tag} homie 😊`)
+      .setDescription(`Welcome ${tag}! 😊`)
       .setColor("#FFFFFF");
 
     message.channel.send(embed);

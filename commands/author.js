@@ -8,7 +8,7 @@ module.exports = {
     const client = new Discord.Client();
     const config = require("../config.json");
     const embed = new Discord.MessageEmbed();
-    embed.setTitle(`About my author ${tag}:`).addFields(
+    embed.setTitle(`About my author :`).addFields(
       {
         name: "Name",
         value: `${config.personinfo.name}`,

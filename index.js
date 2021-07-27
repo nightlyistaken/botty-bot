@@ -7,7 +7,7 @@ const app = express();
 const path = require("path");
 const client = new Discord.Client();
 const config = require("./config.json");
-const util = require('minecraft-server-util');
+const util = require("minecraft-server-util");
 
 // ready (for only 1 time)
 
@@ -38,7 +38,8 @@ for (const file of commandFiles) {
 }
 
 client.on("message", (message) => {
-  if (!message.content.startsWith(config.prefix.p) || message.author.bot) return;
+  if (!message.content.startsWith(config.prefix.p) || message.author.bot)
+    return;
 
   const args = message.content.slice(config.prefix.p.length).split(/ +/);
   const command = args.shift().toLowerCase();
@@ -53,7 +54,7 @@ client.on("message", (message) => {
 
 const usersMap = new Map();
 const LIMIT = 5;
-const TIME = 7000;
+const TIME = 70000;
 const DIFF = 3000;
 
 client.on("message", async (message) => {
@@ -143,7 +144,7 @@ client.on("messageDelete", async (message) => {
   });
   const deletionLog = fetchedLogs.entries.first();
   const deleteLog = client.channels.cache.find(
-    (channel) => channel.id === "867660187871215616"
+    (channel) => channel.id === "868815515567685674"
   );
   if (!deletionLog)
     return deleteLog.send(
@@ -251,8 +252,6 @@ client.on("guildMemberRemove", (member) => {
 
   channel.send(embed);
 });
-
-
 
 // website
 app.use(express.static(path.join(__dirname, "./static")));
