@@ -5,6 +5,7 @@ const fs = require("fs");
 const express = require("express");
 const app = express();
 const path = require("path");
+const bodyParser = require('body-parser');
 const client = new Discord.Client();
 const config = require("./config.json");
 const util = require("minecraft-server-util");
@@ -255,12 +256,19 @@ client.on("guildMemberRemove", (member) => {
 
 // website
 app.use(express.static(path.join(__dirname, "./static")));
-
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
 app.post("/msg", function (req, res) {
+  const body = req.body;
+  const message = body.msg;
   const channel = client.channels.cache.find(
-    (c) => c.id == "866527256510857217"
+    (c) => c.name == "broadcast"
   );
-  channel.send("hello");
+  console.log(body)
+  if(channel && message) {
+    channel.send(message);
+  }
+  res.redirect("/");
 });
 
 const isInvite = async (guild, code) => {

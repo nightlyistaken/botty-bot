@@ -5,13 +5,9 @@
     <title>Send a message</title>
   </head>
   <body>
-    <button type="button" onclick="sendMessage()">Submit</button>
+    <form method="POST" action="/msg">
+      <input type="text" name="msg" placeholder="Enter message" />
+      <button type="submit">Submit</button>
+    </form>
   </body>
-  <script type="text/javascript">
-    function sendMessage(msg) {
-      fetch("/msg", { method: "POST", body: msg }).then(() =>
-        console.log("Sent")
-      );
-    }
-  </script>
 </html>
