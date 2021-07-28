@@ -53,6 +53,8 @@ client.on("message", (message) => {
 
 // basic command end
 
+
+// MUTE!
 const usersMap = new Map();
 const LIMIT = 5;
 const TIME = 70000;
@@ -137,6 +139,10 @@ client.on("message", async (message) => {
   }
 });
 
+
+// MUTE END!
+
+
 client.on("messageDelete", async (message) => {
   if (!message.guild) return;
   const fetchedLogs = await message.guild.fetchAuditLogs({
@@ -145,7 +151,7 @@ client.on("messageDelete", async (message) => {
   });
   const deletionLog = fetchedLogs.entries.first();
   const deleteLog = client.channels.cache.find(
-    (channel) => channel.id === "868815515567685674"
+    (channel) => channel.name === "logs"
   );
   if (!deletionLog)
     return deleteLog.send(
@@ -164,7 +170,7 @@ client.on("messageDelete", async (message) => {
     );
   }
 });
-
+/**
 client.on("message", (message) => {
   if (message.content === config.prefix.p) {
     message.reply("Invalid Command.");
@@ -188,7 +194,7 @@ client.on("messageUpdate", (oldMessage, newMessage) => {
   MessageLog.send(embed);
 });
 
-/**const roles = ['member']
+const roles = ['member']
 
   const channelId = '867660187871215616'
 
@@ -211,6 +217,8 @@ client.on("messageUpdate", (oldMessage, newMessage) => {
     }
   });
 **/
+
+
 
 // THIS IS WELCOME AND LEAVE NON-COMMANDS
 
@@ -288,7 +296,7 @@ const isInvite = async (guild, code) => {
 client.on("message", async (message) => {
   const { guild, member, content } = message;
 
-  // discord.gg/23RAN4
+  // AD
 
   const code = content.split("discord.gg/")[1];
   if (code && isInvite(guild, code)) {
