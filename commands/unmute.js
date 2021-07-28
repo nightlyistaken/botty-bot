@@ -17,6 +17,15 @@ module.exports = {
       );
       let memberTarget = message.guild.members.cache.get(target.id);
 
+      if (!mainRole) {
+        message.guild.roles.create({
+          data: {
+            name: "Member",
+            color: "GRAY",
+          },
+          reason: "we needed a role for members? yes",
+        });
+      }
       memberTarget.roles.remove(muteRole.id);
       memberTarget.roles.add(mainRole.id);
       embed

@@ -5,7 +5,7 @@ const fs = require("fs");
 const express = require("express");
 const app = express();
 const path = require("path");
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 const client = new Discord.Client();
 const config = require("./config.json");
 const util = require("minecraft-server-util");
@@ -52,7 +52,6 @@ client.on("message", (message) => {
 });
 
 // basic command end
-
 
 // MUTE!
 const usersMap = new Map();
@@ -139,9 +138,7 @@ client.on("message", async (message) => {
   }
 });
 
-
 // MUTE END!
-
 
 client.on("messageDelete", async (message) => {
   if (!message.guild) return;
@@ -218,8 +215,6 @@ const roles = ['member']
   });
 **/
 
-
-
 // THIS IS WELCOME AND LEAVE NON-COMMANDS
 
 // welcome:
@@ -264,16 +259,14 @@ client.on("guildMemberRemove", (member) => {
 
 // website
 app.use(express.static(path.join(__dirname, "./static")));
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.post("/msg", function (req, res) {
   const body = req.body;
   const message = body.msg;
-  const channel = client.channels.cache.find(
-    (c) => c.name == "broadcast"
-  );
-  console.log(body)
-  if(channel && message) {
+  const channel = client.channels.cache.find((c) => c.name == "broadcast");
+  console.log(body);
+  if (channel && message) {
     channel.send(message);
   }
   res.redirect("/");

@@ -8,6 +8,7 @@ module.exports = {
     const target = message.mentions.users.first();
     const embed = new Discord.MessageEmbed();
     const tag = `<@${member.id}>`;
+    const mod = message.member.roles.cache.find((r) => r.name === "Mod");
 
     if (target) {
       let mainRole = message.guild.roles.cache.find(
@@ -16,6 +17,16 @@ module.exports = {
       let muteRole = message.guild.roles.cache.find(
         (role) => role.name === "muted"
       );
+      if (!mod) {
+        message.guild.roles.create({
+          data: {
+            name: "Super Cool People",
+            color: "BLUE",
+          },
+          reason: "we needed a role for Super Cool People",
+        });
+      }
+
       let memberTarget = message.guild.members.cache.get(target.id);
       let userID = `<@${memberTarget.user.id}>`;
       if (!args[1]) {

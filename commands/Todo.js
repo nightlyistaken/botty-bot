@@ -9,12 +9,14 @@ module.exports = {
     const tag = `<@${member.id}>`;
     const config = require("../config.json");
 
-    embed
-        .setTitle("Todo")
-        .setDescription("Author todos")
-        .addFields({name: 'Add `Every command help` *AKA* `$___ info` command' , value : "Pending"},
-          {name: 'Add INFO' , value : "Pending"})
+    embed.setTitle("Todo").setDescription("Author todos").addFields(
+      {
+        name: "Add `Every command help` *AKA* `$___ info` command",
+        value: "Pending",
+      },
+      { name: "Add INFO", value: "Pending" }
+    );
 
-           message.channel.send(embed)
+    message.channel.send(embed);
   },
 };

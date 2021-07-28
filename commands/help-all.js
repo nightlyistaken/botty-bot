@@ -33,23 +33,27 @@ module.exports = {
           name: `${config.prefix.p}botty`,
           value: "The bot info.",
           inline: true,
-        },{
+        },
+        {
           name: `${config.prefix.p}author`,
           value: "Gives you the info about my creator",
           inline: true,
-        },{
+        },
+        {
           name: `${config.prefix.p}hello-world`,
           value: "Obvious command",
           inline: false,
-        }, {
+        },
+        {
           name: `${config.prefix.p}t (thanks)`,
           value: "Thank someone [reason to thank]",
           inline: true,
-        }, {
+        },
+        {
           name: `${config.prefix.p}mcserver`,
           value: "Tells info about `hypixel.net`",
           inline: true,
-        },
+        }
       );
     message.channel.send(embed);
   },
