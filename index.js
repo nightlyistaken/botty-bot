@@ -1,4 +1,6 @@
 // CONSTS
+
+
 // made by breadA#3012 (breadA)
 const Discord = require("discord.js");
 const fs = require("fs");
@@ -13,31 +15,33 @@ const util = require("minecraft-server-util");
 // ready (for only 1 time)
 
 client.once("ready", () => {
+  // This will console log 
   console.log("The bot is ready to be used. https://b0t.divy.work");
-
+  // This will Set Activity of the bot
   client.user.setActivity(`♠︎ Prefix ${config.prefix.p}`, {
     name: "botty",
     type: "STREAMING",
     url: "https://www.twitch.tv/breadoonline",
   });
 });
-// ready fully
-
-// Commands FOR THE B.O.T.
+ 
+// ----------------------------------------------------------------------------
 // AKA Command handler
 // basic command handler starts here |
 
-client.commands = new Discord.Collection();
 
+client.commands = new Discord.Collection();
+// This gets the fs const from the const section
 const commandFiles = fs
   .readdirSync("./commands/")
   .filter((file) => file.endsWith(".js"));
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
-
+  // This sets the command name to command
   client.commands.set(command.name, command);
 }
-
+    // If the command starts with prefix in the config, it will message the bot and the 
+    // command will run as per user
 client.on("message", (message) => {
   if (!message.content.startsWith(config.prefix.p) || message.author.bot)
     return;
@@ -51,13 +55,20 @@ client.on("message", (message) => {
   }
 });
 
-// basic command end
 
-// MUTE!
+//  ----------------------------------------------------------------------------
+
+// This is the auto mute command which mutes the person when the LIMIT is crossed
+// -----------------------------------------------------------------------------
+
+// CONSTS
 const usersMap = new Map();
 const LIMIT = 5;
 const TIME = 70000;
 const DIFF = 3000;
+// If the message  crosses the variable "LIMIT" it will mute the user for variable
+// - "TIME" which is in Milliseconds 
+// If the variable "LIMIT" is send between variable "DIFF" The bot will mute the user.
 
 client.on("message", async (message) => {
   if (message.author.bot) return;
@@ -88,6 +99,7 @@ client.on("message", async (message) => {
           (role) => role.name === "Member"
         );
         if (!muterole) {
+          // This is if the "muted" role does not exist
           try {
             muterole = await message.guild.roles.create({
               name: "muted",
@@ -103,6 +115,7 @@ client.on("message", async (message) => {
             console.log(e);
           }
         }
+        // Where the muting and unmuting starts ===
 
         message.member.roles.add(muterole);
         message.member.roles.remove(memberRole);
@@ -138,8 +151,12 @@ client.on("message", async (message) => {
   }
 });
 
-// MUTE END!
+// Anti-Spam is done
+// -------------------------------------------------------------------------------
 
+
+// LOGS
+// -------------------------------------------------------------------------------
 client.on("messageDelete", async (message) => {
   if (!message.guild) return;
   const fetchedLogs = await message.guild.fetchAuditLogs({
@@ -167,57 +184,14 @@ client.on("messageDelete", async (message) => {
     );
   }
 });
-/**
-client.on("message", (message) => {
-  if (message.content === config.prefix.p) {
-    message.reply("Invalid Command.");
-    message.delete({ timeout: 2000 });
-  }
-});
-client.on("messageUpdate", (oldMessage, newMessage) => {
-  // Old message may be undefined
-  if (!oldMessage.author) return;
-  const MessageLog = client.channels.cache.find(
-    (channel) => channel.name === "logs"
-  );
-  const embed = new Discord.MessageEmbed()
-    .setAuthor(newMessage.author.username)
-    .setTimestamp()
-    .setColor("#392B47")
-    .addFields(
-      { name: "original:", value: oldMessage },
-      { name: "edit:", value: newMessage }
-    );
-  MessageLog.send(embed);
-});
 
-const roles = ['member']
 
-  const channelId = '867660187871215616'
+// -------------------------------------------------------------------------------
 
-  client.on('message', (message) => {
-    const { guild, content, member } = message
-
-    if (member.user.bot) {
-      return
-    }
-
-    const hasRole = member.roles.cache.find((role) => {
-      return roles.includes(role.name)
-    })
-
-    if (hasRole) {
-      const channel = guild.channels.cache.get(channelId)
-      channel.send(`<@${member.id}> said this:
-      
-"${content}"`)
-    }
-  });
-**/
 
 // THIS IS WELCOME AND LEAVE NON-COMMANDS
 
-// welcome:
+// Welcome:
 client.on("guildMemberAdd", (member) => {
   console.log("Someone joined");
   const memberWelcomeRole = member.guild.roles.cache.find(
@@ -238,7 +212,7 @@ client.on("guildMemberAdd", (member) => {
   channel.send(embed);
 });
 
-// bye bye :
+// Leave :
 
 client.on("guildMemberRemove", (member) => {
   console.log("Someone left");
@@ -285,18 +259,17 @@ const isInvite = async (guild, code) => {
     });
   });
 };
+  // Anti advertisment ===
 
 client.on("message", async (message) => {
   const { guild, member, content } = message;
-
-  // AD
-
   const code = content.split("discord.gg/")[1];
   if (code && isInvite(guild, code)) {
     message.channel.send("please dont advertise!");
   }
 });
+// Client login == 
+client.login(config.prefix.token);
 
-client.login("ODY2MzU3NTk4MjkwOTY4NjI3.YPRYYw.jzGolqyltUxqG5HZ50Vbyb6TeyU");
-
+// Express JS Listen to Web.
 app.listen(8000);
