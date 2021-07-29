@@ -15,8 +15,8 @@ const util = require("minecraft-server-util");
 client.once("ready", () => {
   console.log("The bot is ready to be used. https://b0t.divy.work");
 
-  client.user.setActivity(`♠︎ Prefix $`, {
-    name: "$botty",
+  client.user.setActivity(`♠︎ Prefix ${config.prefix.p}`, {
+    name: "botty",
     type: "STREAMING",
     url: "https://www.twitch.tv/breadoonline",
   });
