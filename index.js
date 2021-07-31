@@ -1,6 +1,5 @@
 // CONSTS
 
-
 // made by breadA#3012 (breadA)
 const Discord = require("discord.js");
 const fs = require("fs");
@@ -11,11 +10,13 @@ const bodyParser = require("body-parser");
 const client = new Discord.Client();
 const config = require("./config.json");
 const util = require("minecraft-server-util");
+let sqlite3 = require('sqlite3').verbose();
+let db = new sqlite3.Database(':memory:');
 
 // ready (for only 1 time)
 
 client.once("ready", () => {
-  // This will console log 
+  // This will console log
   console.log("The bot is ready to be used. https://b0t.divy.work");
   // This will Set Activity of the bot
   client.user.setActivity(`♠︎ Prefix ${config.prefix.p}`, {
@@ -24,12 +25,11 @@ client.once("ready", () => {
     url: "https://www.twitch.tv/breadoonline",
   });
 });
- 
+
 // ----------------------------------------------------------------------------
 // AKA Command handler
 // basic command handler starts here |
-
-
+// ---------------------------------------------------------------------------
 client.commands = new Discord.Collection();
 // This gets the fs const from the const section
 const commandFiles = fs
@@ -40,8 +40,8 @@ for (const file of commandFiles) {
   // This sets the command name to command
   client.commands.set(command.name, command);
 }
-    // If the command starts with prefix in the config, it will message the bot and the 
-    // command will run as per user
+// If the command starts with prefix in the config, it will message the bot and the
+// command will run as per user
 client.on("message", (message) => {
   if (!message.content.startsWith(config.prefix.p) || message.author.bot)
     return;
@@ -55,106 +55,8 @@ client.on("message", (message) => {
   }
 });
 
-
-//  ----------------------------------------------------------------------------
-
-// This is the auto mute command which mutes the person when the LIMIT is crossed
-// -----------------------------------------------------------------------------
-
-// CONSTS
-const usersMap = new Map();
-const LIMIT = 5;
-const TIME = 70000;
-const DIFF = 3000;
-// If the message  crosses the variable "LIMIT" it will mute the user for variable
-// - "TIME" which is in Milliseconds 
-// If the variable "LIMIT" is send between variable "DIFF" The bot will mute the user.
-
-client.on("message", async (message) => {
-  if (message.author.bot) return;
-  if (usersMap.has(message.author.id)) {
-    const userData = usersMap.get(message.author.id);
-    const { lastMessage, timer } = userData;
-    const difference = message.createdTimestamp - lastMessage.createdTimestamp;
-    let msgCount = userData.msgCount;
-    console.log(difference);
-
-    if (difference > DIFF) {
-      clearTimeout(timer);
-      console.log("Cleared Timeout");
-      userData.msgCount = 1;
-      userData.lastMessage = message;
-      userData.timer = setTimeout(() => {
-        usersMap.delete(message.author.id);
-        console.log("Removed from map.");
-      }, TIME);
-      usersMap.set(message.author.id, userData);
-    } else {
-      ++msgCount;
-      if (parseInt(msgCount) === LIMIT) {
-        let muterole = message.guild.roles.cache.find(
-          (role) => role.name === "muted"
-        );
-        let memberRole = message.guild.roles.cache.find(
-          (role) => role.name === "Member"
-        );
-        if (!muterole) {
-          // This is if the "muted" role does not exist
-          try {
-            muterole = await message.guild.roles.create({
-              name: "muted",
-              permissions: [],
-            });
-            message.guild.channels.cache.forEach(async (channel, id) => {
-              await channel.createOverwrite(muterole, {
-                SEND_MESSAGES: false,
-                ADD_REACTIONS: false,
-              });
-            });
-          } catch (e) {
-            console.log(e);
-          }
-        }
-        // Where the muting and unmuting starts ===
-
-        message.member.roles.add(muterole);
-        message.member.roles.remove(memberRole);
-        const { member, mentions } = message;
-        message.channel
-          .send(`You have been muted <@${member.id}> for spamming`)
-          .then((msg) => {
-            msg.delete({ timeout: 2000 });
-          });
-
-        setTimeout(() => {
-          message.member.roles.remove(muterole);
-          message.member.roles.add(memberRole);
-          message.channel.send("You have been unmuted!").then((msg) => {
-            msg.delete({ timeout: 2000 });
-          });
-        }, TIME);
-      } else {
-        userData.msgCount = msgCount;
-        usersMap.set(message.author.id, userData);
-      }
-    }
-  } else {
-    let fn = setTimeout(() => {
-      usersMap.delete(message.author.id);
-      console.log("Removed from map.");
-    }, TIME);
-    usersMap.set(message.author.id, {
-      msgCount: 1,
-      lastMessage: message,
-      timer: fn,
-    });
-  }
-});
-
 // Anti-Spam is done
 // -------------------------------------------------------------------------------
-
-
 // LOGS
 // -------------------------------------------------------------------------------
 client.on("messageDelete", async (message) => {
@@ -185,9 +87,7 @@ client.on("messageDelete", async (message) => {
   }
 });
 
-
 // -------------------------------------------------------------------------------
-
 
 // THIS IS WELCOME AND LEAVE NON-COMMANDS
 
@@ -200,16 +100,49 @@ client.on("guildMemberAdd", (member) => {
   const channel = member.guild.channels.cache.find(
     (ch) => ch.name === "welcome"
   );
-
+  if (!memberWelcomeRole) {
+    member.guild.roles.create({
+      data: {
+        name: "Member",
+        color: "GRAY",
+        permissions: [
+          "VIEW_CHANNEL",
+          "SEND_MESSAGES",
+          "READ_MESSAGE_HISTORY",
+          "CREATE_INSTANT_INVITE",
+          "CHANGE_NICKNAME",
+          "ATTACH_FILES",
+          "EMBED_LINKS",
+          "ADD_REACTIONS",
+          "USE_EXTERNAL_EMOJIS",
+          "MENTION_EVERYONE",
+          "USE_VAD",
+          "CONNECT",
+          "SPEAK",
+        ],
+      },
+      reason: "we needed a role for members? yes",
+    });
+  }
+    if (memberWelcomeRole) {
   member.roles.add(memberWelcomeRole);
+  const target = member;
+  const targetMember = member.guild.members.cache.get(target.id);
 
+  targetMember
+    .send(`Welcome to the server ${targetMember}! `)
+    .catch(function () {
+      console.log("Promise Rejected");
+    });
   if (!channel) return;
+
   const embed = new Discord.MessageEmbed()
     .setTitle(`Welcome to the server!`)
     .setColor(0xff0000)
     .setDescription(`Welcome ${member} , have a great time! `);
 
   channel.send(embed);
+}
 });
 
 // Leave :
@@ -230,21 +163,54 @@ client.on("guildMemberRemove", (member) => {
 
   channel.send(embed);
 });
+// -----------------------------------------------------------------------------------------
+// WEBSITE
+// -----------------------------------------------------------------------------------------
 
-// website
 app.use(express.static(path.join(__dirname, "./static")));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.get("/getChannels/:guild", function(req, res) {
+  const guildId = req.params.guild;
+  const server = client.guilds.cache.find((g) => g.id == guildId);
+  if(server) {
+    const channels = server.channels.cache.array();5
+    res.status(200).json({channels});
+  } else {
+    res.status(404).send("Not found");
+  }
+});
+
 app.post("/msg", function (req, res) {
   const body = req.body;
   const message = body.msg;
-  const channel = client.channels.cache.find((c) => c.name == "broadcast");
-  console.log(body);
-  if (channel && message) {
-    channel.send(message);
+  const GuildId = body.guild; // GUILD NAME
+  const GuildChannel = body.channelName; // CHANNEL NAME
+  // general or server_name
+  console.log(body)
+  const channel = client.channels.cache.find((c) => c.id == GuildChannel);
+  const server = client.guilds.cache.find((g) => g.id == GuildId);
+
+  var array = [];
+
+  try {
+    let channels = client.channels.cache.array();
+    for (const channel of channels) {
+      array.push(channel.id);
+      console.log(channel.id);
+    }
+  } catch (err) {
+    console.log("array error");
+    console.log(err);
+  }
+  // <#${item}>
+  if (channel) {
+    channel.send(`${server} , ${channel} , SAID "${message}"`);
   }
   res.redirect("/");
 });
+// -----------------------------------------------------------------------------------------
 
 const isInvite = async (guild, code) => {
   return await new Promise((resolve) => {
@@ -259,7 +225,7 @@ const isInvite = async (guild, code) => {
     });
   });
 };
-  // Anti advertisment ===
+// Anti advertisment ===
 
 client.on("message", async (message) => {
   const { guild, member, content } = message;
@@ -268,7 +234,7 @@ client.on("message", async (message) => {
     message.channel.send("please dont advertise!");
   }
 });
-// Client login == 
+// Client login ==
 client.login(config.prefix.token);
 
 // Express JS Listen to Web.

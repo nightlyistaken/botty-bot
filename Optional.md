@@ -2,10 +2,7 @@
 
 ## breadA#3012
 
-
-
 ```js
-
 client.on("message", (message) => {
   if (message.content === config.prefix.p) {
     message.reply("Invalid Command.");
@@ -29,28 +26,26 @@ client.on("messageUpdate", (oldMessage, newMessage) => {
   MessageLog.send(embed);
 });
 
-const roles = ['member']
+const roles = ["member"];
 
-  const channelId = '867660187871215616'
+const channelId = "867660187871215616";
 
-  client.on('message', (message) => {
-    const { guild, content, member } = message
+client.on("message", (message) => {
+  const { guild, content, member } = message;
 
-    if (member.user.bot) {
-      return
-    }
+  if (member.user.bot) {
+    return;
+  }
 
-    const hasRole = member.roles.cache.find((role) => {
-      return roles.includes(role.name)
-    })
-
-    if (hasRole) {
-      const channel = guild.channels.cache.get(channelId)
-      channel.send(`<@${member.id}> said this:
-      
-"${content}"`)
-    }
+  const hasRole = member.roles.cache.find((role) => {
+    return roles.includes(role.name);
   });
 
-
+  if (hasRole) {
+    const channel = guild.channels.cache.get(channelId);
+    channel.send(`<@${member.id}> said this:
+      
+"${content}"`);
+  }
+});
 ```

@@ -17,38 +17,71 @@ module.exports = {
       let muteRole = message.guild.roles.cache.find(
         (role) => role.name === "muted"
       );
-      if (!mod) {
+
+      if (!mainRole) {
         message.guild.roles.create({
           data: {
-            name: "Super Cool People",
-            color: "BLUE",
+            name: "Member",
+            color: "GRAY",
+            permissions: [
+              "VIEW_CHANNEL",
+              "SEND_MESSAGES",
+              "READ_MESSAGE_HISTORY",
+              "CREATE_INSTANT_INVITE",
+              "CHANGE_NICKNAME",
+              "ATTACH_FILES",
+              "EMBED_LINKS",
+              "ADD_REACTIONS",
+              "USE_EXTERNAL_EMOJIS",
+              "MENTION_EVERYONE",
+              "USE_VAD",
+              "CONNECT",
+              "SPEAK",
+            ],
           },
-          reason: "we needed a role for Super Cool People",
+          reason: "we needed a role for members? yes",
         });
       }
-
-      let memberTarget = message.guild.members.cache.get(target.id);
-      let userID = `<@${memberTarget.user.id}>`;
-      if (!args[1]) {
-        memberTarget.roles.remove(mainRole.id);
-        memberTarget.roles.add(muteRole.id);
-        embed
-          .setTitle("Muted")
-          .setDescription(`${tag}, You have muted <@${memberTarget.user.id}>`);
-
-        message.channel.send(embed);
-        return;
+      if (!muteRole) {
+        message.guild.roles.create({
+          data: {
+            name: "muted",
+            color: "GRAY",
+            permissions: ["VIEW_CHANNEL", "READ_MESSAGE_HISTORY"],
+          },
+          reason: "we needed a role for members? yes",
+        });
       }
-      memberTarget.roles.remove(mainRole.id);
-      memberTarget.roles.add(muteRole.id);
-      message.channel.send(`${userID} has been muted for ${ms(ms(args[1]))}`);
+      if (mainRole || muteRole) {
+        if (member.hasPermission("ADMINISTRATOR")) {
+          let memberTarget = message.guild.members.cache.get(target.id);
+          let userID = `<@${memberTarget.user.id}>`;
+          if (!args[1]) {
+            memberTarget.roles.remove(mainRole.id);
+            memberTarget.roles.add(muteRole.id);
+            embed
+              .setTitle("Muted")
+              .setDescription(
+                `${tag}, You have muted <@${memberTarget.user.id}>`
+              );
 
-      setTimeout(function () {
-        memberTarget.roles.remove(muteRole.id);
-        memberTarget.roles.add(mainRole.id);
-      }, ms(args[1]));
-    } else {
-      message.reply("Cant find that member!");
+            message.channel.send(embed);
+            return;
+          }
+          memberTarget.roles.remove(mainRole.id);
+          memberTarget.roles.add(muteRole.id);
+          message.channel.send(
+            `${userID} has been muted for ${ms(ms(args[1]))}`
+          );
+
+          setTimeout(function () {
+            memberTarget.roles.remove(muteRole.id);
+            memberTarget.roles.add(mainRole.id);
+          }, ms(args[1]));
+        } else {
+          message.reply("Cant find that member!");
+        }
+      }
     }
   },
 };

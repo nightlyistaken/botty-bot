@@ -12,6 +12,7 @@
     "minecraft-server-util": "^3.5.2",
     "ms": "^2.1.3",
     "picsum-photos": "^3.0.7",
-    "quickcord": "^7.1.1"
+    "quickcord": "^7.1.1",
+    "sqlite3": "^5.0.2"
   }
 }

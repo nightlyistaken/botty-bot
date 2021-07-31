@@ -8,18 +8,22 @@ module.exports = {
     const client = new Discord.Client();
     const embed = new Discord.MessageEmbed();
     let reason = message.content.split(" ")[2];
-
-    if (
-      member.hasPermission("ADMINISTRATOR") ||
-      member.hasPermission("KICK_MEMBERS")
-    ) {
+    let moderator = message.member.roles.cache.find(
+      (r) => r.name === "Moderators"
+    );
+    let admin = message.member.roles.cache.find((r) => r.name === "Admin");
+    if (moderator || admin) {
       const target = mentions.users.first();
       if (target) {
         const targetMember = message.guild.members.cache.get(target.id);
 
-        targetMember.send(
-          `You have been kicked from the server ${targetMember} for ${reason}`
-        );
+        targetMember
+          .send(
+            `You have been kicked from the server ${targetMember} for ${reason}`
+          )
+          .catch(function () {
+            console.log("Promise Rejected");
+          });
 
         embed
           .setThumbnail("https://avatars.githubusercontent.com/u/62501544?v=4")

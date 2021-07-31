@@ -3,11 +3,53 @@
   <head>
     <meta charset="utf-8" />
     <title>Send a message</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   </head>
   <body>
     <form method="POST" action="/msg">
-      <input type="text" name="msg" placeholder="Enter message" />
+      <textarea
+        type="text"
+        class="form-control"
+        rows="5"
+        name="guild"
+        id="guild"
+        placeholder="Enter YOUR DISCORD GUILD ID HERE!"
+        onkeyup="getChannels()"
+      ></textarea>
+
+        <select name="channelName" id="channel_selector">
+          <!--CHANNELS WILL DISPLAY HERE-->
+        </select>
+
+      <textarea
+        type="text"
+        class="form-control"
+        rows="5"
+        name="msg"
+        placeholder="Enter message"
+      ></textarea>
+
       <button type="submit">Submit</button>
     </form>
   </body>
+  <script type="text/javascript">
+    function getChannels() {
+      console.log("Changed")
+      const selectorElement = document.getElementById("channel_selector");
+      const guildId = document.getElementById("guild").value;
+      fetch("/getChannels/" + guildId).then(async result => {
+        const { channels } = await result.json();
+        selectorElement.innerHTML = "";
+        channels.forEach(channel => {
+          selectorElement.innerHTML += `<option value="${channel.id}" class="dropdown-item">${channel.name}</option>`;
+        });
+      });
+    }
+  </script>
 </html>
