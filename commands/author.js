@@ -22,6 +22,6 @@ module.exports = {
         value: `${config.personinfo.food}`,
       }
     );
-    message.channel.send(embed);
+    message.channel.send(embed).then(msg => msg.delete({timeout: 100000}));
   },
 };

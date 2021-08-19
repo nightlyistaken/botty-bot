@@ -10,9 +10,10 @@ const bodyParser = require("body-parser");
 const client = new Discord.Client();
 const config = require("./config.json");
 const util = require("minecraft-server-util");
-let sqlite3 = require('sqlite3').verbose();
-let db = new sqlite3.Database(':memory:');
+let sqlite3 = require("sqlite3").verbose();
+let db = new sqlite3.Database(":memory:");
 
+const disbut = require("discord.js-buttons")(client);
 // ready (for only 1 time)
 
 client.once("ready", () => {
@@ -51,7 +52,7 @@ client.on("message", (message) => {
 
   const handler = client.commands.get(command);
   if (handler) {
-    handler.execute(message, args);
+    handler.execute(message, args, disbut, paginationEmbed, Discord);
   }
 });
 
@@ -124,25 +125,26 @@ client.on("guildMemberAdd", (member) => {
       reason: "we needed a role for members? yes",
     });
   }
-    if (memberWelcomeRole) {
-  member.roles.add(memberWelcomeRole);
-  const target = member;
-  const targetMember = member.guild.members.cache.get(target.id);
+  if (memberWelcomeRole) {
+    member.roles.add(memberWelcomeRole);
+    const target = member;
+    const targetMember = member.guild.members.cache.get(target.id);
 
-  targetMember
-    .send(`Welcome to the server ${targetMember}! `)
-    .catch(function () {
-      console.log("Promise Rejected");
-    });
-  if (!channel) return;
+    targetMember
+      .send(`Welcome to the server ${targetMember}! `)
+      .catch(function () {
+        console.log("Promise Rejected");
+      });
+    if (!channel) return;
 
-  const embed = new Discord.MessageEmbed()
-    .setTitle(`Welcome to the server!`)
-    .setColor(0xff0000)
-    .setDescription(`Welcome ${member} , have a great time! `);
+    const embed = new Discord.MessageEmbed()
+      .setTitle(`Welcome to the server!`)
+      .setColor(0xff0000)
+      .setDescription(`Welcome ${member} , have a great time! `);
+    embed.setTimestamp();
 
-  channel.send(embed);
-}
+    channel.send(embed);
+  }
 });
 
 // Leave :
@@ -160,6 +162,7 @@ client.on("guildMemberRemove", (member) => {
     .setTitle(`Someone left...`)
     .setColor(0xff0000)
     .setDescription(` ${member} has left the server :weary: `);
+  embed.setTimestamp();
 
   channel.send(embed);
 });
@@ -171,12 +174,13 @@ app.use(express.static(path.join(__dirname, "./static")));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.get("/getChannels/:guild", function(req, res) {
+app.get("/getChannels/:guild", function (req, res) {
   const guildId = req.params.guild;
   const server = client.guilds.cache.find((g) => g.id == guildId);
-  if(server) {
-    const channels = server.channels.cache.array();5
-    res.status(200).json({channels});
+  if (server) {
+    const channels = server.channels.cache.array();
+    5;
+    res.status(200).json({ channels });
   } else {
     res.status(404).send("Not found");
   }
@@ -188,7 +192,7 @@ app.post("/msg", function (req, res) {
   const GuildId = body.guild; // GUILD NAME
   const GuildChannel = body.channelName; // CHANNEL NAME
   // general or server_name
-  console.log(body)
+  console.log(body);
   const channel = client.channels.cache.find((c) => c.id == GuildChannel);
   const server = client.guilds.cache.find((g) => g.id == GuildId);
 
@@ -231,7 +235,10 @@ client.on("message", async (message) => {
   const { guild, member, content } = message;
   const code = content.split("discord.gg/")[1];
   if (code && isInvite(guild, code)) {
-    message.channel.send("please dont advertise!");
+    message
+      .reply("Please don't advertise in this channel.")
+      .then((msg) => msg.delete({ timeout: 10000 }));
+    message.delete();
   }
 });
 // Client login ==
