@@ -5,7 +5,12 @@
     "name": "breadA"
   },
   "prefix": {
+<<<<<<< HEAD
     "p": "-", 
     "token": "ODY2MzU3NTk4MjkwOTY4NjI3.YPRYYw.WfBuCATVJefaF3BsfOoUVH5IXN8"
+=======
+    "p": "-",
+    "token": "TOKE_HERE"
+>>>>>>> 5d493ed77244db1930e31e2ece57b2ecf722d08b
   }
 }
