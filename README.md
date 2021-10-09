@@ -1,4 +1,5 @@
-### `botty-bot`
-The discord bot with some cool stuff.
+### `botty-bot` ARCHIVED
 
-#### You can't find my bot token, don't worry discord helped me by changing my bot token!
+V2 of this bot is comming soon, but with a different name :)
+
+stay *tuned*
